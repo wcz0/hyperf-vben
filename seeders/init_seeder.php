@@ -2,7 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Model\Admin;
+use App\Model\Permission;
+use App\Model\Role;
 use Hyperf\Database\Seeders\Seeder;
+use Hyperf\Utils\ApplicationContext;
 
 class InitSeeder extends Seeder
 {
@@ -211,8 +215,8 @@ class InitSeeder extends Seeder
                 'name' => '超级管理员',
                 'status' => 1,
                 'desc' => 'root role , have all permission',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => date(),
+                'updated_at' => date(),
             ],
             [
                 'value' => 'admin',
@@ -256,6 +260,9 @@ class InitSeeder extends Seeder
 
     public function admin()
     {
+        $container = ApplicationContext::getContainer();
+        $generator = $container->get(IdGeneratorInterface::class);
+
         $admin = Admin::create([
             'id' => 1,
             'username' => 'root',
@@ -267,7 +274,7 @@ class InitSeeder extends Seeder
             'birthday' => fake()->date(),
         ]);
         $user = Admin::create([
-            'id' => app('snowflake')->id(),
+            'id' => $generator->generate(),
             'username' => 'user',
             'password' => bcrypt('root'),
             'name' => '李四',

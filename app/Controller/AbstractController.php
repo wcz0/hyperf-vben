@@ -14,9 +14,10 @@ namespace App\Controller;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
+use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 
-abstract class AbstractController
+class AbstractController
 {
     #[Inject]
     protected ContainerInterface $container;
@@ -26,4 +27,26 @@ abstract class AbstractController
 
     #[Inject]
     protected ResponseInterface $response;
+
+    #[Inject]
+    protected ValidatorFactoryInterface $validation;
+
+    public function success($data = [], $message = 'success', $code = 200)
+    {
+        return $this->response->json([
+            'code' => $code,
+            'type' => 'success',
+            'message' => $message,
+            'result' => $data,
+        ]);
+    }
+
+    public function fail(string $message = 'error',int $code = 400)
+    {
+        return $this->response->json([
+            'code' => $code,
+            'type' => 'success',
+            'message' => $message,
+        ]);
+    }
 }
